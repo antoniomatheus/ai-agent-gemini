@@ -1,13 +1,15 @@
 import os
+from functions.aux import is_outside_allowed_dir
 
 def get_files_info(working_directory, directory="."):
     try:
         path = os.path.join(working_directory, directory)
-        abs_path = os.path.abspath(path)
+        
         directory_txt = f"'{directory}'" if directory != "." else "current"
         files_info = f"Result for {directory_txt} directory:\n"
 
-        if not abs_path.startswith(os.path.abspath(working_directory)): 
+        is_outside_work_dir = is_outside_allowed_dir(working_directory, path) 
+        if is_outside_work_dir:
             return files_info + f'    Error: Cannot list "{path}" as it is outside the permitted working directory'
         if not os.path.isdir(path):
             return files_info + f'    Error: "{path}" is not a directory'
