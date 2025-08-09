@@ -1,8 +1,9 @@
 import os
+from google.genai import types
 from functions.aux import is_outside_allowed_dir
 from config import MAX_CHAR_OUTPUT
 
-def get_files_content(working_directory, file_path):
+def get_file_content(working_directory, file_path):
     try:
         path = os.path.join(working_directory, file_path)
 
@@ -22,3 +23,16 @@ def get_files_content(working_directory, file_path):
         return f"Error: {e}"
 
 
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description=f"Return the content of a specified file, constrained to the working directory and with a maximum length of {MAX_CHAR_OUTPUT} characters",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The path to the file that will be read, relative to the working directory.",
+            )
+        },
+    ),
+)
